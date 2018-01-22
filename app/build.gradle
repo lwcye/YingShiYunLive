@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        sign {
+            keyAlias 'lwcye'
+            keyPassword '19881003'
+            storeFile file('../keystore/MyAndroidSignKey.jks')
+            storePassword '19881003'
+        }
+    }
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId rootProject.ext.applicationId
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        // ndk平台选项
+        ndk {
+            abiFilters = []
+            abiFilters.addAll(rootProject.ext.abiFilters.split(';').collect { it as String })
+        }
+        // 打包资源种类配置
+        resConfigs "zh-rCN", "zh-rHK", "zh-rTW", "en"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    // 排除构建的目录
+    sourceSets {
+        // 动态库目录
+        main {
+            jniLibs.srcDir 'libs/jniLibs'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            multiDexEnabled true
+            signingConfig signingConfigs.sign
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            multiDexEnabled true
+            signingConfig signingConfigs.sign
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+}
+
+/******************** 方法超65535 ********************/
+afterEvaluate {
+    tasks.matching {
+        it.name.startsWith('dex')
+    }.each { dx ->
+        if (dx.additionalParameters == null) {
+            dx.additionalParameters = []
+        }
+        dx.additionalParameters += '--multi-dex' // enable multidex
+
+        // optional
+        // dx.additionalParameters += "--main-dex-list=$projectDir/<filename>".toString() // enable the main-dex-list
+    }
+}
+/******************** 方法超65535 ********************/
+
+dependencies {
+    // 方法数超65535
+    compile 'com.android.support:multidex:1.0.2'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation project(':common')
+}
