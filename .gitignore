@@ -9,10 +9,3 @@
 gradle/
 /captures
 .externalNativeBuild
-app/libs/
-app/src/main/java/com/cmcc/yingshiyunlive/constant/
-app/src/main/java/com/cmcc/yingshiyunlive/network/service/
-app/src/main/java/com/cmcc/yingshiyunlive/sp/
-app/src/main/java/com/cmcc/yingshiyunlive/utils/
-app/src/main/res/drawable-xhdpi/
-keystore/backup/
